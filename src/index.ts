@@ -1,0 +1,45 @@
+import * as dotenv from 'dotenv';
+import * as glob from 'glob';
+import * as ngrok from 'ngrok';
+import * as path from 'path';
+import Telegraf from 'telegraf';
+import * as commandParts from 'telegraf-command-parts';
+
+dotenv.config();
+
+const init = async () => {
+    const path = process.env.SECRET_PATH || '';
+    const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 80;
+    const url = process.env.URL || (await ngrok.connect(port));
+    const bot = new Telegraf(process.env.BOT_TOKEN || '', {
+        telegram: {
+            webhookReply: false,
+        },
+        username: process.env.BOT_NAME || '',
+    });
+
+    bot.telegram.setWebhook(`${url}/${path}`);
+    bot.use(commandParts());
+
+    setupHandlers(bot);
+
+    bot.startWebhook(`/${path}`, null, port);
+    console.log(`Listening on ${url}/${path}`);
+};
+
+const setupHandlers = (bot: any) => {
+    const files = glob.sync('/commands/*.ts', {
+        root: path.resolve(__dirname),
+    });
+
+    files.forEach(file => {
+        try {
+            const Command = require(file).default;
+            Command.addHandlers(bot);
+        } catch (error) {
+            console.log(error);
+        }
+    });
+};
+
+init();
