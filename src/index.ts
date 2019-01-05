@@ -24,7 +24,6 @@ const init = async () => {
     bot.telegram.setWebhook(`${url}/${path}`);
     bot.use(commandParts());
 
-    spinner.clear();
     setupHandlers(bot);
 
     bot.startWebhook(`/${path}`, null, port);
