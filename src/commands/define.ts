@@ -26,11 +26,11 @@ const handler = async (ctx: any) => {
     );
 };
 
-const HelpCommand = {
+const DefineCommand = {
     addHandlers: (bot: any): void => {
         bot.command('/define', handler);
     },
 };
 
-export default HelpCommand;
-export { HelpCommand, handler };
+export default DefineCommand;
+export { DefineCommand, handler };
