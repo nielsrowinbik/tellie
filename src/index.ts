@@ -11,9 +11,9 @@ dotenv.config();
 const init = async () => {
     const spinner = ora().start();
 
-    const path = process.env.SECRET_PATH || '';
-    const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 80;
-    const url = process.env.URL || (await ngrok.connect(port));
+    const path = process.env.BOT_PATH || '';
+    const port = process.env.BOT_PORT ? parseInt(process.env.BOT_PORT, 10) : 80;
+    const url = process.env.BOT_URL || (await ngrok.connect(port));
     const bot = new Telegraf(process.env.BOT_TOKEN || '', {
         telegram: {
             webhookReply: false,
@@ -21,6 +21,7 @@ const init = async () => {
         username: process.env.BOT_NAME || '',
     });
 
+    // TODO: Fix errors caused by line below in production build
     bot.telegram.setWebhook(`${url}/${path}`);
     bot.use(commandParts());
 
