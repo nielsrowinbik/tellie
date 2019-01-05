@@ -669,6 +669,13 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.10.39.tgz#e7e87ad00364dd7bc485c940926345b8ec1a26ca"
   integrity sha512-rE7fktr02J8ybFf6eysife+WF+L4sAHWzw09DgdCebEu+qDwMvv4zl6Bc+825ttGZP73kCKxa3dhJOoGJ8+5mA==
 
+"@types/ora@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@types/ora/-/ora-3.0.0.tgz#fd30d5414e00fc4608cc7e18b565dceb57f4f66c"
+  integrity sha512-AOY050qkT67vf17bQFyHSjF615vs1yAeiHrpwh55BQCnpHi70LGJaLdrrl8YlvtAzDdXTWyYLs4kb6uQXiuHIg==
+  dependencies:
+    "@types/node" "*"
+
 "@webassemblyjs/ast@1.7.11":
   version "1.7.11"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.7.11.tgz#b988582cafbb2b095e8b556526f30c90d057cace"

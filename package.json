@@ -26,6 +26,7 @@
         "@types/nedb": "^1.8.7",
         "@types/node-fetch": "^2.1.4",
         "@types/node-schedule": "^1.2.2",
+        "@types/ora": "^3.0.0",
         "babel-loader": "^8.0.5",
         "cross-env": "^5.2.0",
         "dotenv": "^6.2.0",
