@@ -4,10 +4,13 @@ import * as ngrok from 'ngrok';
 import * as path from 'path';
 import Telegraf from 'telegraf';
 import * as commandParts from 'telegraf-command-parts';
+import * as ora from 'ora';
 
 dotenv.config();
 
 const init = async () => {
+    const spinner = ora().start();
+
     const path = process.env.SECRET_PATH || '';
     const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 80;
     const url = process.env.URL || (await ngrok.connect(port));
@@ -21,10 +24,12 @@ const init = async () => {
     bot.telegram.setWebhook(`${url}/${path}`);
     bot.use(commandParts());
 
+    spinner.clear();
     setupHandlers(bot);
 
     bot.startWebhook(`/${path}`, null, port);
-    console.log(`Listening on ${url}/${path}`);
+
+    spinner.succeed(`Done. Listening on ${url}/${path}`);
 };
 
 const setupHandlers = (bot: any) => {
@@ -33,11 +38,13 @@ const setupHandlers = (bot: any) => {
     });
 
     files.forEach(file => {
+        const spinner = ora(`Loading command from ${file}`).start();
         try {
             const Command = require(file).default;
             Command.addHandlers(bot);
+            spinner.succeed(`Loaded command from ${file}`);
         } catch (error) {
-            console.log(error);
+            spinner.fail(`Could not load command from ${file}`);
         }
     });
 };
