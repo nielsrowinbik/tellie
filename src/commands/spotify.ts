@@ -37,10 +37,7 @@ const SpotifyCommand = async ({
     );
 
     if (trackPreview) {
-        await replyWithPhoto(
-            albumArtwork,
-            Extra.inReplyTo(message_id).load({ caption: get(album, 'name') })
-        );
+        await replyWithPhoto(albumArtwork, Extra.inReplyTo(message_id));
         return replyWithAudio(trackPreview, options);
     }
     return replyWithPhoto(albumArtwork, options.inReplyTo(message_id)).load({
