@@ -24,7 +24,6 @@ const SpotifyCommand = async ({
     const trackPreview = get(track, 'preview_url');
     const album = get(track, 'album');
     const albumArtwork = get(album, 'images[1].url');
-    const albumArtworkSmall = get(album, 'images[2].url');
     const albumPermalink = get(album, 'external_urls.spotify');
     const artist = get(track, 'artists[0]');
     const artistPermalink = get(artist, 'external_urls.spotify');
@@ -42,15 +41,7 @@ const SpotifyCommand = async ({
             albumArtwork,
             Extra.inReplyTo(message_id).load({ caption: get(album, 'name') })
         );
-        return replyWithAudio(
-            trackPreview,
-            options.load({
-                duration: 30,
-                performer: get(artist, 'name'),
-                title: get(track, 'name'),
-                thumb: albumArtworkSmall,
-            })
-        );
+        return replyWithAudio(trackPreview, options);
     }
     return replyWithPhoto(albumArtwork, options.inReplyTo(message_id)).load({
         caption: get(album, 'name'),
