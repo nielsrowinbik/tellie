@@ -28,7 +28,7 @@ const SpotifyCommand = async ({
     const artist = get(track, 'artists[0]');
     const artistPermalink = get(artist, 'external_urls.spotify');
 
-    const options = Extra.markup(m =>
+    const keyboard = Extra.markup(m =>
         m.inlineKeyboard([
             [m.urlButton('Listen to full track', trackPermalink)],
             [m.urlButton('Listen to album', albumPermalink)],
@@ -36,11 +36,14 @@ const SpotifyCommand = async ({
         ])
     );
 
-    if (trackPreview) {
-        await replyWithPhoto(albumArtwork, Extra.inReplyTo(message_id));
-        return replyWithAudio(trackPreview, options);
+    if (albumArtwork) {
+        if (trackPreview) {
+            await replyWithPhoto(albumArtwork, Extra.inReplyTo(message_id));
+            return replyWithAudio(trackPreview, keyboard);
+        }
+        return replyWithPhoto(albumArtwork, keyboard.inReplyTo(message_id));
     }
-    return replyWithPhoto(albumArtwork, options.inReplyTo(message_id));
+    return;
 };
 
 const getToken = async (): Promise<string | boolean> => {
