@@ -4,8 +4,8 @@
     "description": "",
     "main": "dist/tellie.js",
     "scripts": {
-        "build": "netlify-lambda -c ./webpack.config.js build src/bot",
-        "dev": "netlify-lambda -c ./webpack.config.js serve src/bot",
+        "build": "netlify-lambda -c ./webpack.config.js build src",
+        "dev": "netlify-lambda -c ./webpack.config.js serve src",
         "ngrok": "ngrok http -bind-tls=true 9000"
     },
     "author": "Niels Bik <hey@nielsbik.nl> (https://nielsbik.nl)",
