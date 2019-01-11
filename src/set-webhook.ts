@@ -14,9 +14,9 @@ const BOT_DOMAIN = trimEnd(BOT_DOMAIN_UNSAFE);
 const bot = new Telegraf(BOT_TOKEN || '');
 
 const app = express();
-app.get('/.netlify/functions/set-webhook', (_, res) => {
+app.get('/.netlify/functions/set-webhook', async (_, res) => {
     const webhook = `${BOT_DOMAIN || ''}/${BOT_PATH}`;
-    return bot.telegram.setWebhook(webhook)
+    return (await bot.telegram.setWebhook(webhook))
         ? res.json({ status: 'OK', webhook })
         : res.json({ status: 'ERROR' });
 });
