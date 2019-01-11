@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv';
 import { Extra } from 'telegraf';
-import { acknowledge, removeString } from '../utils';
+import { removeString } from '../utils';
 import { addHours, format, isToday, isTomorrow } from 'date-fns';
 import * as chrono from 'chrono-node';
 import { convertToTimeZone } from 'date-fns-timezone';
@@ -22,12 +22,19 @@ const RemindMeCommand = async ({ message, reply, state }: any) => {
         : format(date, '[on] MMM D [at] HH:mm');
 
     // Send acknowledgement
-    const options = Extra.markdown()
-        .inReplyTo(message_id)
-        .markup(m =>
-            m.inlineKeyboard([[m.callbackButton('Cancel', 'reminder_cancel')]])
-        );
-    return reply(`${acknowledge()}, I'll remind you ${moment}.`, options);
+    // const options = Extra.markdown()
+    //     .inReplyTo(message_id)
+    //     .markup(m =>
+    //         m.inlineKeyboard([[m.callbackButton('Cancel', 'reminder_cancel')]])
+    //     );
+    // return reply(`${acknowledge()}, I'll remind you ${moment}.`, options);
+
+    // Send placeholder acknowledgement
+    const options = Extra.markdown().inReplyTo(message_id);
+    return reply(
+        `I can't quite do that yet, but in the near future I will be able to remind you ${moment}.`,
+        options
+    );
 };
 
 const parse = (str: string) => {
