@@ -4,14 +4,15 @@ import * as express from 'express';
 import Telegraf from 'telegraf';
 import serverless from 'serverless-http';
 
+import { BOT_NAME, BOT_PATH } from './utils/constants';
+
 import DefineCommand from './commands/define';
 import HelpCommand from './commands/help';
 import RemindMeCommand from './commands/remindme';
 
 dotenv.config();
 
-const { BOT_DOMAIN, BOT_NAME, BOT_TOKEN } = process.env;
-const BOT_PATH = '.netlify/functions/bot';
+const { BOT_TOKEN } = process.env;
 
 const bot = new Telegraf(BOT_TOKEN || '', {
     telegram: {
@@ -26,12 +27,7 @@ bot.command('/help', HelpCommand);
 bot.command('/remindme', RemindMeCommand);
 
 const app = express();
-app.get(`/${BOT_PATH}`, (_, res) => {
-    // TODO: Move this to its own (secret) endpoint
-    return bot.telegram.setWebhook(`${BOT_DOMAIN || ''}/${BOT_PATH}`)
-        ? res.json({ status: 'OK' })
-        : res.json({ status: 'ERROR' });
-});
+app.get(`/${BOT_PATH}`, (_, res) => res.json({ status: 'OK' }));
 app.use(bot.webhookCallback(`/${BOT_PATH}`));
 
 const handler = serverless(app);
