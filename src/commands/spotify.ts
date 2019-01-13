@@ -3,20 +3,23 @@ import fetch from 'node-fetch';
 import { Extra } from 'telegraf';
 import { URLSearchParams } from 'url';
 import { get } from 'lodash';
+import { acknowledge } from '../utils';
 
 dotenv.config();
 
 const { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } = process.env;
 
 const SpotifyCommand = async ({
+    from,
     message: { message_id },
+    reply,
     replyWithAudio,
     replyWithPhoto,
     state: { command },
 }: any) => {
-    const { args: words } = command;
-
-    if (words.length === 0) return;
+    const { first_name } = from;
+    const { args } = command;
+    const words = args || 'Running in the 90s';
 
     const result = await doSearch(words);
     const track = get(result, 'tracks.items[0]');
@@ -28,22 +31,42 @@ const SpotifyCommand = async ({
     const artist = get(track, 'artists[0]');
     const artistPermalink = get(artist, 'external_urls.spotify');
 
-    const keyboard = Extra.markup(m =>
-        m.inlineKeyboard([
-            [m.urlButton('Listen to full track', trackPermalink)],
-            [m.urlButton('Listen to album', albumPermalink)],
-            [m.urlButton('View artist', artistPermalink)],
-        ])
-    );
-
-    if (albumArtwork) {
-        if (trackPreview) {
-            await replyWithPhoto(albumArtwork, Extra.inReplyTo(message_id));
-            return replyWithAudio(trackPreview, keyboard);
-        }
-        return replyWithPhoto(albumArtwork, keyboard.inReplyTo(message_id));
+    if (trackPreview) {
+        await replyWithAudio(trackPreview, Extra.inReplyTo(message_id));
+        await reply(
+            `Here's a sample for *${track.name}* from the album:`,
+            Extra.markdown()
+        );
+        return replyWithPhoto(
+            albumArtwork,
+            Extra.load({ caption: album.name }).markup(m =>
+                m.inlineKeyboard([
+                    [m.urlButton('Listen to full track', trackPermalink)],
+                    [m.urlButton('Listen to album', albumPermalink)],
+                    [m.urlButton('View artist', artistPermalink)],
+                ])
+            )
+        );
     }
-    return;
+
+    await reply(
+        `${acknowledge()} ${first_name}, *${track.name}* by *${
+            artist.name
+        }* from the album:`,
+        Extra.markdown().inReplyTo(message_id)
+    );
+    return replyWithPhoto(
+        albumArtwork,
+        Extra.load({
+            caption: album.name,
+        }).markup(m =>
+            m.inlineKeyboard([
+                [m.urlButton('Listen to full track', trackPermalink)],
+                [m.urlButton('Listen to album', albumPermalink)],
+                [m.urlButton('View artist', artistPermalink)],
+            ])
+        )
+    );
 };
 
 const getToken = async (): Promise<string | boolean> => {
