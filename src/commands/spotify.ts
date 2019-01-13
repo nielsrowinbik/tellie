@@ -34,12 +34,12 @@ const SpotifyCommand = async ({
     if (trackPreview) {
         await replyWithAudio(trackPreview, Extra.inReplyTo(message_id));
         await reply(
-            `Here's a sample for *${track.name}* from the album:`,
+            `Here's a sample for *${get(track, 'name')}* from the album:`,
             Extra.markdown()
         );
         return replyWithPhoto(
             albumArtwork,
-            Extra.load({ caption: album.name }).markup(m =>
+            Extra.load({ caption: get(album, 'name') }).markup(m =>
                 m.inlineKeyboard([
                     [m.urlButton('Listen to full track', trackPermalink)],
                     [m.urlButton('Listen to album', albumPermalink)],
