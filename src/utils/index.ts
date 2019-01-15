@@ -22,11 +22,15 @@ export const stripCommand = (str: string) => {
     };
 };
 
-export const acknowledge = (): string => {
-    const options = ['Alright', 'Okay', 'Sure'];
+const randomFromOptions = (options: string[]) => (): string =>
+    options[(Math.random() * options.length) >> 0];
 
-    return options[(Math.random() * options.length) >> 0];
-};
+export const acknowledge = randomFromOptions(['Alright', 'Okay', 'Sure']);
+
+export const remind = randomFromOptions([
+    "here's your reminder",
+    "don't forget about",
+]);
 
 export const objectToURLSearchParams = (
     obj: object,

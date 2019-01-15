@@ -1,6 +1,11 @@
 import * as dotenv from 'dotenv';
 import { Extra } from 'telegraf';
-import { acknowledge, objectToURLSearchParams, removeString } from '../utils';
+import {
+    acknowledge,
+    objectToURLSearchParams,
+    remind,
+    removeString,
+} from '../utils';
 import { addHours, format, isToday, isTomorrow } from 'date-fns';
 import * as chrono from 'chrono-node';
 import { convertToTimeZone } from 'date-fns-timezone';
@@ -58,7 +63,7 @@ const RemindMeCommand = async ({ from, message, reply, state }: any) => {
         _id: uuid(),
         acknowledgement: sent.message_id,
         chat: sent.chat.id,
-        text: `${greeting}, here's your reminder${text}.`,
+        text: `${greeting}, ${text}.`,
     };
 
     // Build A Trigger API call
@@ -81,6 +86,7 @@ const RemindMeCommand = async ({ from, message, reply, state }: any) => {
     )}`;
 
     // Send A Trigger API call
+    // TODO: Catch errors when storing reminder (by editing acknowledgement)
     return fetch(requestUrl);
 };
 
@@ -106,14 +112,12 @@ const parse = (str: string) => {
 
 const subjectToReminder = (subject: string): string => {
     const subjectWords = words(subject);
-    if (subject === '' || isUndefined(subject)) return '';
-    if (subjectWords[0] === 'to')
-        return `: *${subject
-            .split(' ')
-            .slice(1)
-            .join(' ')}*`;
-    if (subjectWords[0] === 'about') return ` ${subject}`;
-    return ` about ${subject}`;
+
+    if (subject === '' || isUndefined(subject)) return "here's your reminder";
+    if (subjectWords[0] === 'to') return `don't forget ${subject}`;
+    return `${remind()} ${
+        subjectWords[0] === 'about' ? subject : `about ${subject}`
+    }`;
 };
 
 export default RemindMeCommand;
