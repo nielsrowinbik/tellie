@@ -1,20 +1,35 @@
 import * as dotenv from 'dotenv';
 import { Extra } from 'telegraf';
-import { removeString } from '../utils';
+import { acknowledge, objectToURLSearchParams, removeString } from '../utils';
 import { addHours, format, isToday, isTomorrow } from 'date-fns';
 import * as chrono from 'chrono-node';
 import { convertToTimeZone } from 'date-fns-timezone';
+import { isUndefined, words } from 'lodash';
+import uuid from 'uuid/v4';
+import { Reminder } from '../utils/constants';
+import fetch from 'node-fetch';
 
 dotenv.config();
 
-const { BOT_TIMEZONE } = process.env;
+const {
+    ATRIGGER_API_KEY,
+    ATRIGGER_API_SECRET,
+    BOT_DOMAIN,
+    BOT_TIMEZONE,
+} = process.env;
 
-const RemindMeCommand = async ({ message, reply, state }: any) => {
+// TODO: When /remindme command is a reply to a message, send reminder about that message
+// TODO: Add ability to cancel a reminder
+// TODO: Add ability to snooze a reminder
+// TODO: Add ability to mark reminder as done
+
+const RemindMeCommand = async ({ from, message, reply, state }: any) => {
     const { args: userMessage } = state.command;
+    const { first_name, id } = from;
     const { message_id } = message;
 
     // Parse user message
-    const { date } = parse(userMessage);
+    const { date, subject } = parse(userMessage);
     const moment = isToday(date)
         ? format(date, '[at] HH:mm')
         : isTomorrow(date)
@@ -22,19 +37,51 @@ const RemindMeCommand = async ({ message, reply, state }: any) => {
         : format(date, '[on] MMM D [at] HH:mm');
 
     // Send acknowledgement
-    // const options = Extra.markdown()
-    //     .inReplyTo(message_id)
-    //     .markup(m =>
-    //         m.inlineKeyboard([[m.callbackButton('Cancel', 'reminder_cancel')]])
-    //     );
-    // return reply(`${acknowledge()}, I'll remind you ${moment}.`, options);
-
-    // Send placeholder acknowledgement
-    const options = Extra.markdown().inReplyTo(message_id);
-    return reply(
-        `I can't quite do that yet, but in the near future I will be able to remind you ${moment}.`,
+    const options = Extra.markdown()
+        .inReplyTo(message_id)
+        .markup(m =>
+            m.inlineKeyboard([
+                [
+                    // m.callbackButton('Cancel', 'reminder_cancel')
+                ],
+            ])
+        );
+    const sent = await reply(
+        `${acknowledge()}, I'll remind you ${moment}.`,
         options
     );
+
+    // Build actual reminder
+    const greeting = `[${first_name}](tg://user?id=${id})`;
+    const text = subjectToReminder(subject);
+    const reminder: Reminder = {
+        _id: uuid(),
+        acknowledgement: sent.message_id,
+        chat: sent.chat.id,
+        text: `${greeting}, here's your reminder${text}.`,
+    };
+
+    // Build A Trigger API call
+    const url = `${BOT_DOMAIN}/.netlify/functions/send-reminder?${objectToURLSearchParams(
+        reminder,
+        true
+    )}`;
+    const requestUrlParams = {
+        key: ATRIGGER_API_KEY,
+        secret: ATRIGGER_API_SECRET,
+        timeSlice: '0min',
+        count: 1,
+        tag_id: reminder._id,
+        first: date.toISOString(),
+        url,
+    };
+    const requestUrl = `https://api.atrigger.com/v1/tasks/create?${objectToURLSearchParams(
+        requestUrlParams,
+        true
+    )}`;
+
+    // Send A Trigger API call
+    return fetch(requestUrl);
 };
 
 const parse = (str: string) => {
@@ -55,6 +102,18 @@ const parse = (str: string) => {
             : str
         ).trim(),
     };
+};
+
+const subjectToReminder = (subject: string): string => {
+    const subjectWords = words(subject);
+    if (subject === '' || isUndefined(subject)) return '';
+    if (subjectWords[0] === 'to')
+        return `: *${subject
+            .split(' ')
+            .slice(1)
+            .join(' ')}*`;
+    if (subjectWords[0] === 'about') return ` ${subject}`;
+    return ` about ${subject}`;
 };
 
 export default RemindMeCommand;

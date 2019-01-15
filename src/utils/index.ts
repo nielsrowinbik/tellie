@@ -1,3 +1,5 @@
+import { URLSearchParams } from 'url';
+
 export const removeString = (sub: string, rem: string, bindex?: number) => {
     if (!bindex) bindex = sub.indexOf(rem);
     const eindex = bindex + rem.length;
@@ -24,4 +26,13 @@ export const acknowledge = (): string => {
     const options = ['Alright', 'Okay', 'Sure'];
 
     return options[(Math.random() * options.length) >> 0];
+};
+
+export const objectToURLSearchParams = (
+    obj: object,
+    toString: boolean = false
+): URLSearchParams | string => {
+    const params = new URLSearchParams();
+    Object.keys(obj).forEach(key => params.append(key, obj[key]));
+    return toString ? params.toString() : params;
 };
