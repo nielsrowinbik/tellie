@@ -87,7 +87,9 @@ const RemindMeCommand = async ({ from, message, reply, state }: any) => {
 
     // Send A Trigger API call
     // TODO: Catch errors when storing reminder (by editing acknowledgement)
-    return await fetch(requestUrl);
+    fetch(requestUrl)
+        .then(console.log)
+        .catch(console.log);
 };
 
 const parse = (str: string) => {
