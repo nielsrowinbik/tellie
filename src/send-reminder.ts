@@ -1,25 +1,23 @@
 import * as dotenv from 'dotenv';
 import Telegraf, { Extra } from 'telegraf';
-import { get, trimEnd } from 'lodash';
 import { Reminder } from './utils/constants';
 import { Handler, Callback, APIGatewayEvent } from 'aws-lambda';
 
 dotenv.config();
 
-const { BOT_DOMAIN: BOT_DOMAIN_UNSAFE, BOT_TOKEN } = process.env;
-const BOT_DOMAIN = trimEnd(BOT_DOMAIN_UNSAFE);
+const { BOT_TOKEN } = process.env;
 
 const bot = new Telegraf(BOT_TOKEN || '');
 
 // TODO: Edit original acknowledgement when sending reminder
 
 const handler: Handler = (event: APIGatewayEvent, _, callback: Callback) => {
-    const query = event.queryStringParameters;
+    const query = event.queryStringParameters || {};
     const reminder: Reminder = {
-        _id: get(query, '_id'),
-        acknowledgement: parseInt(get(query, 'acknowledgement')),
-        chat: parseInt(get(query, 'chat')),
-        text: get(query, 'text'),
+        _id: query._id,
+        acknowledgement: parseInt(query.acknowledgement),
+        chat: parseInt(query.chat),
+        text: query.text,
     };
     const options = Extra.markdown()
         .inReplyTo(reminder.acknowledgement)

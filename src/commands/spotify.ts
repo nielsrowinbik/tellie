@@ -21,49 +21,32 @@ const SpotifyCommand = async ({
     const { args } = command;
     const words = args || 'Running in the 90s';
 
-    const result = await doSearch(words);
-    const track = get(result, 'tracks.items[0]');
-    const trackPermalink = get(track, 'external_urls.spotify');
-    const trackPreview = get(track, 'preview_url');
-    const album = get(track, 'album');
-    const albumArtwork = get(album, 'images[1].url');
-    const albumPermalink = get(album, 'external_urls.spotify');
-    const artist = get(track, 'artists[0]');
-    const artistPermalink = get(artist, 'external_urls.spotify');
+    const { album, artist, track } = resultToObject(await doSearch(words));
 
-    if (trackPreview) {
-        await replyWithAudio(trackPreview, Extra.inReplyTo(message_id));
+    if (track.preview) {
+        await replyWithAudio(track.preview, Extra.inReplyTo(message_id));
         await reply(
             `Here's a sample for *${get(track, 'name')}* from the album:`,
             Extra.markdown()
         );
-        return replyWithPhoto(
-            albumArtwork,
-            Extra.load({ caption: get(album, 'name') }).markup(m =>
-                m.inlineKeyboard([
-                    [m.urlButton('Listen to full track', trackPermalink)],
-                    [m.urlButton('Listen to album', albumPermalink)],
-                    [m.urlButton('View artist', artistPermalink)],
-                ])
-            )
+    } else {
+        await reply(
+            `${acknowledge()} ${first_name}, *${track.name}* by *${
+                artist.name
+            }* from the album:`,
+            Extra.markdown().inReplyTo(message_id)
         );
     }
 
-    await reply(
-        `${acknowledge()} ${first_name}, *${track.name}* by *${
-            artist.name
-        }* from the album:`,
-        Extra.markdown().inReplyTo(message_id)
-    );
     return replyWithPhoto(
-        albumArtwork,
+        album.artwork,
         Extra.load({
             caption: album.name,
         }).markup(m =>
             m.inlineKeyboard([
-                [m.urlButton('Listen to full track', trackPermalink)],
-                [m.urlButton('Listen to album', albumPermalink)],
-                [m.urlButton('View artist', artistPermalink)],
+                [m.urlButton('Listen to full track', track.permalink)],
+                [m.urlButton('Listen to album', album.permalink)],
+                [m.urlButton('View artist', artist.permalink)],
             ])
         )
     );
@@ -103,6 +86,28 @@ const doSearch = async (query: string) => {
     )).json();
 
     return response;
+};
+
+const resultToObject = (json: object) => {
+    return {
+        track: {
+            name: get(json, 'tracks.items[0].name'),
+            permalink: get(json, 'tracks.items[0].external_urls.spotify'),
+            preview: get(json, 'tracks.items[0].preview_url'),
+        },
+        artist: {
+            name: get(json, 'tracks.items[0].artists[0].name'),
+            permalink: get(
+                json,
+                'tracks.items[0].artists[0]external_urls.spotify'
+            ),
+        },
+        album: {
+            artwork: get(json, 'tracks.items[0].album.images[1].url'),
+            name: get(json, 'tracks.items[0].album.name'),
+            permalink: get(json, 'tracks.items[0].album.external_urls.spotify'),
+        },
+    };
 };
 
 export default SpotifyCommand;
