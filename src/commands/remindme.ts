@@ -28,11 +28,7 @@ const RemindMeCommand = async ({ from, message, reply, state }: any) => {
     const { date, formatted, subject } = parse(userMessage);
 
     // Send acknowledgement
-    const options = Extra.markdown()
-        .inReplyTo(message_id)
-        .markup(m =>
-            m.inlineKeyboard([[m.callbackButton('Cancel', 'reminder_cancel')]])
-        );
+    const options = Extra.markdown().inReplyTo(message_id);
     const sent = await reply(
         `${acknowledge()}, I'll remind you ${formatted}.`,
         options

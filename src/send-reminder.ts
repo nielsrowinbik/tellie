@@ -11,16 +11,7 @@ const bot = new Telegraf(BOT_TOKEN || '');
 
 const handler: Handler = (event: APIGatewayEvent, _, callback: Callback) => {
     const reminder: Reminder = JSON.parse(event.body || '').data;
-    const options = Extra.markdown()
-        .inReplyTo(reminder.acknowledgement)
-        .markup(m =>
-            m.inlineKeyboard([
-                [
-                    m.callbackButton('Snooze 1 hour', 'reminder_snooze'),
-                    m.callbackButton('Done', 'reminder_done'),
-                ],
-            ])
-        );
+    const options: any = Extra.markdown().inReplyTo(reminder.acknowledgement); // 'any' because the sendMessage function is incorrectly typed
 
     bot.telegram
         .sendMessage(reminder.chat, reminder.text, options)
