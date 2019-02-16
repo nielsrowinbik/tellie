@@ -25,12 +25,7 @@ const RemindMeCommand = async ({ from, message, reply, state }: any) => {
     const { message_id } = message;
 
     // Parse user message
-    const { date, subject } = parse(userMessage);
-    const moment = isToday(date)
-        ? format(date, '[at] HH:mm')
-        : isTomorrow(date)
-        ? format(date, '[tomorrow at] HH:mm')
-        : format(date, '[on] MMM D [at] HH:mm');
+    const { date, formatted, subject } = parse(userMessage);
 
     // Send acknowledgement
     const options = Extra.markdown()
@@ -39,7 +34,7 @@ const RemindMeCommand = async ({ from, message, reply, state }: any) => {
             m.inlineKeyboard([[m.callbackButton('Cancel', 'reminder_cancel')]])
         );
     const sent = await reply(
-        `${acknowledge()}, I'll remind you ${moment}.`,
+        `${acknowledge()}, I'll remind you ${formatted}.`,
         options
     );
 
@@ -80,19 +75,31 @@ const RemindMeCommand = async ({ from, message, reply, state }: any) => {
 const parse = (str: string) => {
     const now = new Date();
     const parsed = chrono.parse(str, now, { forwardDate: true });
+    const date =
+        parsed.length > 0
+            ? new Date(parsed[0].start.date().getTime())
+            : addHours(now, 1);
+
     return {
-        date:
-            parsed.length > 0
-                ? convertToTimeZone(
-                      new Date(parsed[0].start.date().getTime()),
-                      { timeZone: BOT_TIMEZONE || 'Europe/London' }
-                  )
-                : addHours(now, 1),
+        date,
+        formatted: formatDate(date),
         subject: (parsed.length > 0
             ? removeString(str, parsed[0].text, parsed[0].index)
             : str
         ).trim(),
     };
+};
+
+const formatDate = (serverDate: Date): string => {
+    const date = convertToTimeZone(serverDate, {
+        timeZone: BOT_TIMEZONE || 'Europe/London',
+    });
+
+    return isToday(date)
+        ? format(date, '[at] HH:mm')
+        : isTomorrow(date)
+        ? format(date, '[tomorrow at] HH:mm')
+        : format(date, '[on] MMM D [at] HH:mm');
 };
 
 const subjectToReminder = (subject: string): string => {
