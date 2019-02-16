@@ -13,12 +13,6 @@ dotenv.config();
 
 const { BOT_TIMEZONE, POSTHOOK_API_KEY } = process.env;
 
-// TODO: When /remindme command is a reply to a message, send reminder about that message
-// TODO: Edit original acknowledgement when sending reminder
-// TODO: Add ability to cancel a reminder
-// TODO: Add ability to snooze a reminder
-// TODO: Add ability to mark reminder as done
-
 const RemindMeCommand = async ({ from, message, reply, state }: any) => {
     const { args: userMessage } = state.command;
     const { first_name, id } = from;
@@ -26,6 +20,7 @@ const RemindMeCommand = async ({ from, message, reply, state }: any) => {
 
     // Parse user message
     const { date, formatted, subject } = parse(userMessage);
+    const inReplyTo = parseReplyTo(message);
 
     // Send acknowledgement
     const options = Extra.markdown().inReplyTo(message_id);
@@ -41,6 +36,7 @@ const RemindMeCommand = async ({ from, message, reply, state }: any) => {
         _id: uuid(),
         acknowledgement: sent.message_id,
         chat: sent.chat.id,
+        inReplyTo,
         text: `${greeting}, ${text}.`,
     };
 
@@ -60,7 +56,8 @@ const RemindMeCommand = async ({ from, message, reply, state }: any) => {
     };
 
     // Send Posthook API call
-    // TODO: Catch errors when storing reminder (by editing acknowledgement)
+    // TODO: Show user reminder couldn't be saved by editing acknowledgement in case
+    // of an error
     try {
         await fetch(url, request);
     } catch (error) {
@@ -84,6 +81,11 @@ const parse = (str: string) => {
             : str
         ).trim(),
     };
+};
+
+const parseReplyTo = (message: any): number => {
+    if (message.reply_to_message) return message.reply_to_message.message_id;
+    return message.message_id;
 };
 
 const formatDate = (serverDate: Date): string => {

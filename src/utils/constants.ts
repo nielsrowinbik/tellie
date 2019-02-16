@@ -4,5 +4,6 @@ export interface Reminder {
     _id?: string;
     acknowledgement: number;
     chat: number;
+    inReplyTo: number;
     text: string;
 }
