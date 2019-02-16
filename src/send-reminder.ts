@@ -9,23 +9,15 @@ const { BOT_TOKEN } = process.env;
 
 const bot = new Telegraf(BOT_TOKEN || '');
 
-// TODO: Edit original acknowledgement when sending reminder
-
 const handler: Handler = (event: APIGatewayEvent, _, callback: Callback) => {
-    const query = event.queryStringParameters || {};
-    const reminder: Reminder = {
-        _id: query._id,
-        acknowledgement: parseInt(query.acknowledgement),
-        chat: parseInt(query.chat),
-        text: query.text,
-    };
+    const reminder: Reminder = JSON.parse(event.body || '').data;
     const options = Extra.markdown()
         .inReplyTo(reminder.acknowledgement)
         .markup(m =>
             m.inlineKeyboard([
                 [
-                    // m.callbackButton('Snooze 1 hour', 'reminder_snooze'),
-                    // m.callbackButton('Done', 'reminder_done'),
+                    m.callbackButton('Snooze 1 hour', 'reminder_snooze'),
+                    m.callbackButton('Done', 'reminder_done'),
                 ],
             ])
         );

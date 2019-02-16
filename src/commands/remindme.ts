@@ -1,11 +1,6 @@
 import * as dotenv from 'dotenv';
 import { Extra } from 'telegraf';
-import {
-    acknowledge,
-    objectToURLSearchParams,
-    remind,
-    removeString,
-} from '../utils';
+import { acknowledge, remind, removeString } from '../utils';
 import { addHours, format, isToday, isTomorrow } from 'date-fns';
 import * as chrono from 'chrono-node';
 import { convertToTimeZone } from 'date-fns-timezone';
@@ -16,14 +11,10 @@ import fetch from 'node-fetch';
 
 dotenv.config();
 
-const {
-    ATRIGGER_API_KEY,
-    ATRIGGER_API_SECRET,
-    BOT_DOMAIN,
-    BOT_TIMEZONE,
-} = process.env;
+const { BOT_TIMEZONE, POSTHOOK_API_KEY } = process.env;
 
 // TODO: When /remindme command is a reply to a message, send reminder about that message
+// TODO: Edit original acknowledgement when sending reminder
 // TODO: Add ability to cancel a reminder
 // TODO: Add ability to snooze a reminder
 // TODO: Add ability to mark reminder as done
@@ -45,11 +36,7 @@ const RemindMeCommand = async ({ from, message, reply, state }: any) => {
     const options = Extra.markdown()
         .inReplyTo(message_id)
         .markup(m =>
-            m.inlineKeyboard([
-                [
-                    // m.callbackButton('Cancel', 'reminder_cancel')
-                ],
-            ])
+            m.inlineKeyboard([[m.callbackButton('Cancel', 'reminder_cancel')]])
         );
     const sent = await reply(
         `${acknowledge()}, I'll remind you ${moment}.`,
@@ -66,35 +53,25 @@ const RemindMeCommand = async ({ from, message, reply, state }: any) => {
         text: `${greeting}, ${text}.`,
     };
 
-    // Build A Trigger API call
-    const url = `${BOT_DOMAIN}/.netlify/functions/send-reminder?${objectToURLSearchParams(
-        reminder,
-        true
-    )}`;
-    const requestUrlParams = {
-        key: ATRIGGER_API_KEY,
-        secret: ATRIGGER_API_SECRET,
-        timeSlice: '0min',
-        count: 1,
-        tag_id: reminder._id,
-        first: date.toISOString(),
-        url,
+    // Build Posthook API call
+    const url = 'https://api.posthook.io/v1/hooks';
+    const request = {
+        body: JSON.stringify({
+            path: `/.netlify/functions/send-reminder`,
+            postAt: date.toISOString(),
+            data: reminder,
+        }),
+        headers: {
+            'Content-Type': 'application/json',
+            'X-API-Key': POSTHOOK_API_KEY || '',
+        },
+        method: 'POST',
     };
-    const requestUrl = `https://api.atrigger.com/v1/tasks/create?${objectToURLSearchParams(
-        requestUrlParams,
-        true
-    )}`;
 
-    // Send A Trigger API call
+    // Send Posthook API call
     // TODO: Catch errors when storing reminder (by editing acknowledgement)
     try {
-        const res = await (await fetch(requestUrl, {
-            headers: {
-                'Cache-Control': 'no-cache',
-            },
-        })).json();
-        console.log('Saved reminder:');
-        console.log(res);
+        await fetch(url, request);
     } catch (error) {
         console.log(error);
     }
