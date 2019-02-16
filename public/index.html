@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Tellie</title>
+        <meta name="description" content="Tellie" />
+        <meta name="theme-color" content="#ffffff" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <style>
+            @font-face {
+                font-display: swap;
+                font-family: 'Ubuntu';
+                font-style: normal;
+                font-weight: 700;
+                src: url('/assets/fonts/Ubuntu-Bold.woff2') format('woff2'),
+                    url('/assets/fonts/Ubuntu-Bold.woff') format('woff');
+            }
+
+            @font-face {
+                font-display: fallback;
+                font-family: 'Inter UI';
+                font-style: normal;
+                font-weight: 400;
+                src: url('/assets/fonts/Inter-UI-Regular.woff2') format('woff2'),
+                    url('/assets/fonts/Inter-UI-Regular.woff') format('woff');
+            }
+
+            @font-face {
+                font-display: fallback;
+                font-family: 'Inter UI';
+                font-style: normal;
+                font-weight: 700;
+                src: url('/assets/fonts/Inter-UI-Bold.woff2') format('woff2'),
+                    url('/assets/fonts/Inter-UI-Bold.woff') format('woff');
+            }
+
+            *,
+            *:before,
+            *:after {
+                box-sizing: border-box;
+            }
+
+            html,
+            body {
+                background-color: #32afed;
+                color: #ffffff;
+                font-family: 'Inter UI', sans-serif;
+                font-size: 24px;
+                line-height: normal;
+                margin: 0;
+                -webkit-font-smoothing: antialiased;
+                -webkit-print-color-adjust: exact;
+            }
+
+            body {
+                align-items: center;
+                display: flex;
+                justify-content: center;
+                min-height: 100vh;
+            }
+
+            h1 {
+                font-family: Ubuntu, sans-serif;
+                font-size: 3rem;
+                font-weight: 700;
+                letter-spacing: -2.5px;
+                margin: 0px 0px 25px -5px;
+            }
+
+            p {
+                font-size: 1rem;
+                line-height: 28px;
+                margin: 20px 0px;
+            }
+
+            p:first-of-type {
+                font-weight: 600;
+            }
+
+            p > a {
+                color: currentColor;
+                text-decoration: none;
+            }
+
+            main {
+                flex: auto;
+                margin-bottom: 6rem;
+                max-width: 525px;
+                padding: 28px;
+                text-align: center;
+            }
+
+            main > a {
+                color: inherit;
+                font-size: 0.65rem;
+                font-weight: 600;
+                margin: 0px 30px 0px 0px;
+                text-decoration: none;
+            }
+
+            main > a:hover {
+                color: #383c43;
+            }
+
+            main > a > img,
+            main > a > svg {
+                fill: currentColor;
+                height: 18px;
+                margin-right: 8px;
+                transform: translateY(3px);
+                width: 25px;
+            }
+
+            footer {
+                font-size: 0.5rem;
+                margin-top: 3rem;
+            }
+
+            @media (max-width: 600px) {
+                html,
+                body {
+                    font-size: 20px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <main>
+            <h1>Tellie</h1>
+            <!-- <p>
+                <a
+                    href="https://telegram.me/telliebot"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    >add to Telegram</a
+                >
+            </p> -->
+        </main>
+    </body>
+</html>
