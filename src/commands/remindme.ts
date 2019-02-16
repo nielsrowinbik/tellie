@@ -78,9 +78,7 @@ const RemindMeCommand = async ({ from, message, reply, state }: any) => {
 };
 
 const parse = (str: string) => {
-    const now = convertToTimeZone(new Date(), {
-        timeZone: BOT_TIMEZONE || 'Europe/London',
-    });
+    const now = new Date();
     const parsed = chrono.parse(str, now, { forwardDate: true });
     return {
         date:
