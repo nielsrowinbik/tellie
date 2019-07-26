@@ -29,7 +29,7 @@ const DefineCommand = async ({
     );
 
     return reply(
-        `According *${author}* on Urban Dictionary, the definition of *${lowerCase(
+        `According to *${author}* on Urban Dictionary, the definition of *${lowerCase(
             word
         )}* is:\n\n_${capitalize(definition)}_`,
         extraOptions
