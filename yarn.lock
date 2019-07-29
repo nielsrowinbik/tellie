@@ -3179,10 +3179,10 @@ netlify-lambda@^1.5.1:
     webpack "^4.17.1"
     webpack-merge "^4.1.4"
 
-ngrok@^3.2.3:
-  version "3.2.3"
-  resolved "https://registry.yarnpkg.com/ngrok/-/ngrok-3.2.3.tgz#847f62a8bb79e218815bb94bbb4790be8d47c161"
-  integrity sha512-p32VJznacM5O5oAEu8VnIoRpBl7NSodMQuZVHNwvzudBI5IXC1a37kCtgleIBjPft1gqd1jtgSRBEuZ6RPSRMA==
+ngrok@^3.2.4:
+  version "3.2.4"
+  resolved "https://registry.yarnpkg.com/ngrok/-/ngrok-3.2.4.tgz#1844d8746f1e9813b6fc08d4d5db0be1c61061a6"
+  integrity sha512-+Ay8Gi4a9zipVNsNEomT/Q9gKw8QxBaq9q7fWokqMt0yxbmMrdmIvMMRGnKuZfafEZxnpHR+/CbS+dyNqdU5gQ==
   dependencies:
     "@types/node" "^8.10.50"
     decompress-zip "^0.3.2"
