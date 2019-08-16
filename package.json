@@ -25,7 +25,7 @@
         "@types/node-fetch": "^2.5.0",
         "dotenv": "^8.0.0",
         "live-server": "^1.2.1",
-        "netlify-lambda": "^1.5.1",
+        "netlify-lambda": "^1.6.0",
         "ngrok": "^3.2.5",
         "prettier": "^1.18.2"
     },
