@@ -23,7 +23,7 @@
         "@types/express": "^4.17.1",
         "@types/lodash": "^4.14.137",
         "@types/node-fetch": "^2.5.0",
-        "dotenv": "^8.0.0",
+        "dotenv": "^8.1.0",
         "live-server": "^1.2.1",
         "netlify-lambda": "^1.6.2",
         "ngrok": "^3.2.5",
