@@ -37,7 +37,7 @@
         "lodash": "^4.17.15",
         "node-fetch": "^2.6.0",
         "serverless-http": "^2.3.0",
-        "telegraf": "^3.32.0",
+        "telegraf": "^3.33.0",
         "telegraf-command-parts": "^1.0.3",
         "uuid": "^3.3.3"
     }
