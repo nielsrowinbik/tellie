@@ -1,6 +1,6 @@
-import * as dotenv from 'dotenv';
-import * as commandParts from 'telegraf-command-parts';
-import * as express from 'express';
+import dotenv from 'dotenv';
+import commandParts from 'telegraf-command-parts';
+import express from 'express';
 import Telegraf from 'telegraf';
 import serverless from 'serverless-http';
 

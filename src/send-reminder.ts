@@ -1,4 +1,4 @@
-import * as dotenv from 'dotenv';
+import dotenv from 'dotenv';
 import Telegraf, { Extra } from 'telegraf';
 import { Reminder } from './utils/constants';
 import { Handler, Callback, APIGatewayEvent } from 'aws-lambda';

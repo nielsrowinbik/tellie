@@ -1,5 +1,5 @@
-import * as dotenv from 'dotenv';
-import * as express from 'express';
+import dotenv from 'dotenv';
+import express from 'express';
 import Telegraf from 'telegraf';
 import serverless from 'serverless-http';
 import { trimEnd } from 'lodash';
