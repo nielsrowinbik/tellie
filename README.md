@@ -29,11 +29,16 @@ Take note of the URL that ngrok exposes. We'll use `https://urlfromngrok.ngrok.i
 Create a `.env` file in the root folder of the project and add the following entries:
 
 ```sh
-BOT_TOKEN=123456789:AbCdfGhIJKlmNoQQRsTUVwxyZ
 BOT_DOMAIN=https://urlfromngrok.ngrok.io
+BOT_TIMEZONE=Europe/Amsterdam
+BOT_TOKEN=123456789:AbCdfGhIJKlmNoQQRsTUVwxyZ
+POSTHOOK_API_KEY=
 ```
 
-`BOT_TOKEN` is a token you get from BotFather on Telegram. `BOT_DOMAIN` is the URL from ngrok we grabbed earlier.
+ - `BOT_DOMAIN` is the URL from ngrok we grabbed earlier.
+ - `BOT_TIMEZONE` is a timezone in its TZ database name.
+ - `BOT_TOKEN` is a token you get from BotFather on Telegram.
+ - `POSTHOOK_API_KEY` is the API key needed to store reminders. If you do not plan on using the remindme command, leave this out.
 
 #### Start the local development servers
 
