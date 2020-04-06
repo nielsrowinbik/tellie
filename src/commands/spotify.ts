@@ -21,6 +21,14 @@ const SpotifyCommand = async ({
     const { args } = command;
     const words = args || 'Running in the 90s';
 
+    if (!SPOTIFY_CLIENT_ID) {
+        console.error('SPOTIFY_CLIENT_ID not set!');
+    };
+    
+    if (!SPOTIFY_CLIENT_SECRET) {
+        console.error('SPOTIFY_CLIENT_SECRET not set!');
+    };
+
     const { album, artist, track } = resultToObject(await doSearch(words));
 
     if (track.preview) {

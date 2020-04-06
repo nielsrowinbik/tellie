@@ -3,9 +3,9 @@ import { Extra } from 'telegraf';
 import { acknowledge, remind, removeString } from '../utils';
 import { addHours, format, isToday, isTomorrow } from 'date-fns';
 import * as chrono from 'chrono-node';
-import { convertToTimeZone } from 'date-fns-timezone';
+import { utcToZonedTime } from 'date-fns-tz';
 import { isUndefined, words } from 'lodash';
-import uuid from 'uuid/v4';
+import { v4 as uuid } from 'uuid';
 import { Reminder } from '../utils/constants';
 import fetch from 'node-fetch';
 
@@ -17,6 +17,14 @@ const RemindMeCommand = async ({ from, message, reply, state }: any) => {
     const { args: userMessage } = state.command;
     const { first_name, id } = from;
     const { message_id } = message;
+
+    if (!BOT_TIMEZONE) {
+        console.error('BOT_TIMEZONE not set!');
+    };
+    
+    if (!POSTHOOK_API_KEY) {
+        console.error('POSTHOOK_API_KEY not set!');
+    };
 
     // Parse user message
     const { date, formatted, subject } = parse(userMessage);
@@ -89,9 +97,7 @@ const parseReplyTo = (message: any): number => {
 };
 
 const formatDate = (serverDate: Date): string => {
-    const date = convertToTimeZone(serverDate, {
-        timeZone: BOT_TIMEZONE || 'Europe/London',
-    });
+    const date = utcToZonedTime(serverDate, BOT_TIMEZONE || 'Europe/London');
 
     return isToday(date)
         ? format(date, "'at' HH:mm")

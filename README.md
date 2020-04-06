@@ -33,12 +33,15 @@ BOT_DOMAIN=https://urlfromngrok.ngrok.io
 BOT_TIMEZONE=Europe/Amsterdam
 BOT_TOKEN=123456789:AbCdfGhIJKlmNoQQRsTUVwxyZ
 POSTHOOK_API_KEY=
+SPOTIFY_CLIENT_ID=
+SPOTIFY_CLIENT_SECRET=
 ```
 
  - `BOT_DOMAIN` is the URL from ngrok we grabbed earlier.
  - `BOT_TIMEZONE` is a timezone in its TZ database name.
  - `BOT_TOKEN` is a token you get from BotFather on Telegram.
- - `POSTHOOK_API_KEY` is the API key needed to store reminders. If you do not plan on using the remindme command, leave this out.
+ - `POSTHOOK_API_KEY` is needed for the /remindme command.
+ - `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET` are needed for the /spotify command.
 
 #### Start the local development servers
 
