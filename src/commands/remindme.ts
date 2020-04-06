@@ -94,10 +94,10 @@ const formatDate = (serverDate: Date): string => {
     });
 
     return isToday(date)
-        ? format(date, '[at] HH:mm')
+        ? format(date, "'at' HH:mm")
         : isTomorrow(date)
-        ? format(date, '[tomorrow at] HH:mm')
-        : format(date, '[on] MMM D [at] HH:mm');
+        ? format(date, "tomorrow at' HH:mm")
+        : format(date, "'on' MMM d 'at' HH:mm");
 };
 
 const subjectToReminder = (subject: string): string => {
