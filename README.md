@@ -19,6 +19,7 @@ $ npm i
 #### Expose the local development server to the web through ngrok:
 
 ```sh
+$ npm i -g ngrok
 $ npm run ngrok
 ```
 
