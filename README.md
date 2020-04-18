@@ -20,7 +20,7 @@ $ npm i
 
 ```sh
 $ npm i -g ngrok
-$ npm run ngrok
+$ ngrok http -bind-tls=true 8080
 ```
 
 Take note of the URL that ngrok exposes. We'll use `https://urlfromngrok.ngrok.io` in this guide as an example.
@@ -38,11 +38,11 @@ SPOTIFY_CLIENT_ID=
 SPOTIFY_CLIENT_SECRET=
 ```
 
- - `BOT_DOMAIN` is the URL from ngrok we grabbed earlier.
- - `BOT_TIMEZONE` is a timezone in its TZ database name.
- - `BOT_TOKEN` is a token you get from BotFather on Telegram.
- - `POSTHOOK_API_KEY` is needed for the /remindme command.
- - `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET` are needed for the /spotify command.
+-   `BOT_DOMAIN` is the URL from ngrok we grabbed earlier.
+-   `BOT_TIMEZONE` is a timezone in its TZ database name.
+-   `BOT_TOKEN` is a token you get from BotFather on Telegram.
+-   `POSTHOOK_API_KEY` is needed for the /remindme command.
+-   `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET` are needed for the /spotify command.
 
 #### Start the local development servers
 
@@ -55,7 +55,6 @@ $ npm run dev
 
 This will start the netlify-functions emulator locally (first command) and serve the files in a live-reloading web-server (second command).
 
-
 #### Have the bot set the correct webhook
 
 Open your browser and point it to `https://urlfromngrok.ngrok.io/.netlify/functions/set-webhook`. Doing a GET here will make the bot register the correct webhook URL with the bot.
@@ -65,7 +64,6 @@ Note that this step is only necessary if you use the free version of ngrok, whic
 #### All done
 
 You are now ready to start development. Any commands sent to the bot will be handled by your local machine.
-
 
 ### License
 
