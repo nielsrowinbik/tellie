@@ -28,7 +28,7 @@
         "netlify-lambda": "^2.0.2"
     },
     "dependencies": {
-        "chrono-node": "^2.1.10",
+        "chrono-node": "^2.2.4",
         "date-fns": "^2.16.1",
         "date-fns-tz": "^1.0.12",
         "express": "^4.17.1",
