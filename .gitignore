@@ -1,6 +1,11 @@
-bot
-dist
-node_modules
-*.env
-*.db
 *.log
+.DS_Store
+.next
+node_modules
+.env*
+!.env.example
+public/sitemap.xml
+public/feed.xml
+public/sw*
+public/workbox*
+.vercel
